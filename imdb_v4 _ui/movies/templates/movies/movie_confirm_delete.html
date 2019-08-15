@@ -1,0 +1,18 @@
+{% extends "movies/base.html" %}
+{% load  static %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <h2>Are you sure yoy want delete the post?</h2>
+            <button class="btn btn-outline-danger" type="submit">Yes Delete</button>
+            <a class="btn btn-outline-secondary" href="detail.Html">No,Cancel</a>
+        </form>
+
+
+    </div>
+
+
+
+
+{% endblock content %}

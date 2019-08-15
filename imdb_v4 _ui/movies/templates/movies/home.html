@@ -1,0 +1,31 @@
+{% extends "movies/base.html" %}
+{% load  static %}
+{% block content %}
+    <div style="column-count: 4; " class="row centered">
+    {% for movie in m_list %}
+          <div  style="height:450px;width:280px;" class="content-section centered">
+            <div  style="margin: 20px" class="movie">
+
+                <div>
+                   <a href="{% url 'movie-detail' movie.id %}"> <img  width="200" height="300" style="border-style: solid;border-color: #1f1f1f"  src=" {% if movie.picture %}{{ movie.picture.url}} {% else %}
+{%  static 'movies/noPoster.jpeg' %}{% endif %}"></a>
+
+                <P style="font-size: small;height: 15px "><a style="color: #5b80b2;" href="{% url 'movie-detail' movie.id %}">{{ movie.title }}</a></P>
+
+                    <small class="text-muted bot">Release:{{ movie.release_date|date:"Y" }}</small><br>
+
+                <p style="color: goldenrod">
+                <img width="10" height="10" src="{%  static 'icon/star.png' %}">
+                     {% if movie.rating_avg != None%}
+                    {{ movie.rating_avg }}/5</p>
+                     {% else %} N/A
+                {% endif %}
+                </div>
+
+            </div>
+            <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
+            <p class="article-content">{{ post.content }}</p>
+          </div>
+    {% endfor %}
+    </div>
+{% endblock content %}

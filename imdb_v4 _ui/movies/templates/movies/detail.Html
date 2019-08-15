@@ -1,0 +1,92 @@
+{% extends "movies/base.html" %}
+{% load  static %}
+{% block content %}
+<div style="column-count: 4; " class="row centered">
+<div class="col-md-3">
+<img width="200" height="300" style="border-style: solid ;border-color: #5f788a" src="{% if movie.picture %}{{ movie.picture.url }}{% else %}{% static "movies/noPoster.jpeg" %}{% endif %}" />
+</div>
+ <div class="col-md-7">
+<p><b>Title:</b> {{ movie.title }}</p>
+<p><b>Release:</b> {{ movie.release_date }}</p>
+<p><b>Genre:</b> {{ movie.genre }}</p>
+ <p><b>Director:</b>
+     {%  for mc in mc_list %}
+         {% if mc.role.slug == 'DIR' %}
+             {{ mc.crew.full_name }}
+         {% endif %}
+     {% endfor %}
+  </p>
+ <p style="text-align: justify"><b>Description:</b> {{ movie.description }}</p>
+    {%  if movie.user == user %}
+     <a class="btn btn-outline-danger" href="{% url 'delete-movie' movie.id %}">Delete Movie</a>
+        <a class="btn btn-outline-secondary" href="{% url 'update-movie' movie.id %}">Update Movie</a>
+
+    {% endif %}
+
+ </div>
+
+<div style="display: flex; justify-content: flex-end" class="col-md-2">
+{#<p><b>Avg Rating:</b> {{ movie.rating_avg }}/5</p>#}
+{#<p><b># of Votes:</b> {{ movie.rating_count }}</p>#}
+<form action="{% url 'movie-post-rating' movie.id %}" method="post">
+    <span style="background-color: gold">☆</span>
+    {% csrf_token %}
+    {{ rate_form }}
+
+    <input class="btn btn-info" type="submit" value="Submit">
+
+</form>
+</div>
+
+
+<div class="col-md-10">
+<h3>Actors:</h3>
+<ul>
+{%  for mc in mc_list %}
+             {% if mc.role.title == 'Actor' %}
+                 <li>
+              <img style="border-radius: 50%"  width="50" height="50" src="{% if mc.crew.avatar.url %}
+{{ mc.crew.avatar.url }}
+{% else %}
+{{ mc.crew.get_picture }}
+{% endif %}">
+             {{ mc.crew.full_name }}
+
+                 </li>
+         {% endif %}
+{% endfor %}
+</ul>
+
+
+
+
+<div class="col-md-8" style="margin-top: 50px">
+{% if request.user.is_authenticated %}
+<form action="{% url 'movie-post-comment' movie.id %}" method="post">
+    {% csrf_token %}
+    {{ comment_form.as_ul }}
+    <input class="btn btn-info" type="submit" value="Submit">
+</form>
+ {% else %}
+    if you want to send a Comment , pls Login
+{% endif %}
+<br>
+
+<h3>Comment List:</h3>
+{%  for c in comment_list %}
+    <p>
+        Date: {{ c.created_time }}<br />
+        User: {{ c.user.username }}<br />
+        <pre style="background-color: floralwhite" class="content-section">Comment :{{ c.comment_text }}</pre>
+        <hr />
+    </p>
+{% endfor %}
+</div>
+
+
+
+
+</div>
+
+
+{% endblock content %}
